@@ -1,12 +1,27 @@
 ﻿<Window x:Class="StayActive.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="StayActive - Test" Height="200" Width="300">
-    <Grid>
-        <Button Content="Mover mouse"
-                Width="120" Height="40"
-                Click="TestButton_Click"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"/>
-    </Grid>
+        Title="StayActive - Configuración" Height="280" Width="350"
+        WindowStartupLocation="CenterScreen">
+    <StackPanel Margin="20">
+
+        <TextBlock Text="Estado:" FontWeight="Bold" Margin="0,0,0,5"/>
+        <TextBlock x:Name="StatusText" Text="Inactivo" Margin="0,0,0,15"/>
+
+        <TextBlock Text="Intervalo (segundos):" Margin="0,0,0,5"/>
+        <Slider x:Name="IntervalSlider" Minimum="5" Maximum="120" Value="30"
+                TickFrequency="5" IsSnapToTickEnabled="True"
+                ValueChanged="IntervalSlider_ValueChanged" Margin="0,0,0,5"/>
+        <TextBlock x:Name="IntervalValueText" Text="30 segundos" Margin="0,0,0,15"/>
+
+        <TextBlock Text="Tipo de actividad:" Margin="0,0,0,5"/>
+        <ComboBox x:Name="ActivityTypeCombo" SelectionChanged="ActivityTypeCombo_SelectionChanged" Margin="0,0,0,15">
+            <ComboBoxItem Content="Mover mouse" Tag="MoveMouse" IsSelected="True"/>
+            <ComboBoxItem Content="Click al aire" Tag="ClickMouse"/>
+            <ComboBoxItem Content="Presionar tecla" Tag="PressKey"/>
+        </ComboBox>
+
+        <Button Content="Activar / Desactivar" Height="35" Click="ToggleButton_Click"/>
+
+    </StackPanel>
 </Window>

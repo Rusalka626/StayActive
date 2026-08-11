@@ -11,6 +11,7 @@ namespace StayActive.Services
     {
         private readonly DispatcherTimer _timer = new();
         public bool IsActive { get; private set; }
+        public ActivityType SelectedActivity { get; set; } = ActivityType.MoveMouse;
 
         public event Action<bool>? StateChanged;
 

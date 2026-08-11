@@ -2,6 +2,7 @@
 using StayActive.Services;
 using System.Windows;
 using System.Windows.Controls;
+using Application = System.Windows.Application;
 
 namespace StayActive
 {
@@ -11,20 +12,19 @@ namespace StayActive
     public partial class App : Application
     {
         private TaskbarIcon? _trayIcon;
-        private ActivityService _activityService = null!;
+        public ActivityService ActivityService { get; private set; } = null!;
 
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            _activityService = new ActivityService(intervalSeconds: 30);
-            _activityService.StateChanged += OnActivityStateChanged;
+            ActivityService = new ActivityService(intervalSeconds: 30);
+            ActivityService.StateChanged += OnActivityStateChanged;
 
             _trayIcon = (TaskbarIcon)Resources["TrayIcon"];
             _trayIcon.ForceCreate();
 
-            // Oculta la ventana principal al iniciar; la app vive en el tray
             MainWindow?.Hide();
         }
 
@@ -37,12 +37,12 @@ namespace StayActive
 
         private void ToggleMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            _activityService.Toggle();
+            ActivityService.Toggle();
         }
 
         private void TrayIcon_LeftClick(object sender, RoutedEventArgs e)
         {
-            _activityService.Toggle();
+            ActivityService.Toggle();
         }
 
         private void OpenSettings_Click(object sender, RoutedEventArgs e)
