@@ -4,7 +4,7 @@
              xmlns:tb="clr-namespace:H.NotifyIcon;assembly=H.NotifyIcon.Wpf">
     <Application.Resources>
         <tb:TaskbarIcon x:Key="TrayIcon"
-                         IconSource="/Resources/icon.ico"
+                         IconSource="/Resources/icon_inactive.ico"
                          ToolTipText="StayActive - Inactivo"
                          MenuActivation="RightClick"
                          TrayLeftMouseUp="TrayIcon_LeftClick">

@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <None Remove="Resources\Icon.ico" />
+    <None Remove="Resources\icon_active.ico" />
+    <None Remove="Resources\icon_inactive.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +21,8 @@
 
   <ItemGroup>
     <Resource Include="Resources\Icon.ico" />
+    <Resource Include="Resources\icon_active.ico" />
+    <Resource Include="Resources\icon_inactive.ico" />
   </ItemGroup>
 
 </Project>

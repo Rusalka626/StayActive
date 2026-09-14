@@ -3,6 +3,7 @@ using StayActive.Services;
 using System.Windows;
 using System.Windows.Controls;
 using Application = System.Windows.Application;
+using System.Windows.Media.Imaging;
 
 namespace StayActive
 {
@@ -26,6 +27,8 @@ namespace StayActive
             _trayIcon = (TaskbarIcon)Resources["TrayIcon"];
             _trayIcon.ForceCreate();
 
+            OnActivityStateChanged(ActivityService.IsActive);
+
             MainWindow = new MainWindow();
             //MainWindow?.Hide();
         }
@@ -35,6 +38,12 @@ namespace StayActive
             var menuItem = ((ContextMenu)_trayIcon!.ContextMenu!).Items[0] as MenuItem;
             menuItem!.Header = isActive ? "Desactivar" : "Activar";
             _trayIcon.ToolTipText = isActive ? "StayActive - Activo" : "StayActive - Inactivo";
+
+            string iconPath = isActive
+                ? "pack://application:,,,/Resources/icon_active.ico"
+                : "pack://application:,,,/Resources/icon_inactive.ico";
+
+            _trayIcon.IconSource = new BitmapImage(new Uri(iconPath));
         }
 
         private void ToggleMenuItem_Click(object sender, RoutedEventArgs e)
