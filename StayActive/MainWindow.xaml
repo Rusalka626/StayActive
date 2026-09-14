@@ -11,12 +11,20 @@
         <TextBlock Text="Estado:" FontWeight="Bold" Margin="0,0,0,5"/>
         <TextBlock x:Name="StatusText" Text="Inactivo" Margin="0,0,0,15"/>
 
+        
+        <Separator Margin="0,0,0,15"/>
+
+        
         <TextBlock Text="Intervalo (segundos):" Margin="0,0,0,5"/>
         <Slider x:Name="IntervalSlider" Minimum="5" Maximum="120" Value="30"
                 TickFrequency="5" IsSnapToTickEnabled="True"
                 ValueChanged="IntervalSlider_ValueChanged" Margin="0,0,0,5"/>
         <TextBlock x:Name="IntervalValueText" Text="30 segundos" Margin="0,0,0,15"/>
 
+        
+        <Separator Margin="0,0,0,15"/>
+        
+        
         <TextBlock Text="Tipo de actividad:" Margin="0,0,0,5"/>
         <ComboBox x:Name="ActivityTypeCombo" SelectionChanged="ActivityTypeCombo_SelectionChanged" Margin="0,0,0,15">
             <ComboBoxItem Content="Mover mouse" Tag="MoveMouse" IsSelected="True"/>
@@ -24,6 +32,10 @@
             <ComboBoxItem Content="Presionar tecla" Tag="PressKey"/>
         </ComboBox>
 
+        
+        <Separator Margin="0,0,0,15"/>
+
+        
         <CheckBox x:Name="StartupCheckBox"
           Content="Iniciar automáticamente con Windows"
           Checked="StartupCheckBox_Changed"
