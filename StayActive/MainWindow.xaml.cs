@@ -16,7 +16,13 @@ public partial class MainWindow : Window
         {
             Service.StateChanged += UpdateStatusText;
             UpdateStatusText(Service.IsActive);
+            StartupCheckBox.IsChecked = StartupService.IsEnabled();
         };
+    }
+
+    private void StartupCheckBox_Changed(object sender, RoutedEventArgs e)
+    {
+        StartupService.SetEnabled(StartupCheckBox.IsChecked == true);
     }
 
     private void UpdateStatusText(bool isActive)

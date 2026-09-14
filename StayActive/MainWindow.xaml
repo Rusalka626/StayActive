@@ -21,6 +21,12 @@
             <ComboBoxItem Content="Presionar tecla" Tag="PressKey"/>
         </ComboBox>
 
+        <CheckBox x:Name="StartupCheckBox"
+          Content="Iniciar automáticamente con Windows"
+          Checked="StartupCheckBox_Changed"
+          Unchecked="StartupCheckBox_Changed"
+          Margin="0,0,0,15"/>
+
         <Button Content="Activar / Desactivar" Height="35" Click="ToggleButton_Click"/>
 
     </StackPanel>
