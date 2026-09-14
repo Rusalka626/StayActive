@@ -1,8 +1,9 @@
-﻿using System.Windows;
+﻿using StayActive.Services;
+using System.Windows;
 using System.Windows.Controls;
-using StayActive.Services;
-using Application = System.Windows.Application;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using Application = System.Windows.Application;
 using Color = System.Windows.Media.Color;
 
 namespace StayActive;
@@ -67,6 +68,8 @@ public partial class MainWindow : Window
         StatusDot.Fill = isActive
         ? new SolidColorBrush(Color.FromRgb(46, 204, 113))
         : new SolidColorBrush(Color.FromRgb(149, 165, 166));
+
+        ToggleActionButton.Content = isActive ? "Desactivar" : "Activar";
     }
 
     private void ToggleButton_Click(object sender, RoutedEventArgs e)

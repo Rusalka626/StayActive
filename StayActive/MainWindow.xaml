@@ -74,7 +74,7 @@
         </Grid>
 
         <!-- Toggle -->
-        <Button Content="Activar / Desactivar" Height="35" Click="ToggleButton_Click"/>
-
+        <Button x:Name="ToggleActionButton" Content="Activar" Height="35" Click="ToggleButton_Click"/>
+        
     </StackPanel>
 </Window>
