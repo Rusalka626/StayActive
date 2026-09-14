@@ -12,11 +12,14 @@ namespace StayActive.Services
         private readonly DispatcherTimer _timer = new();
         public bool IsActive { get; private set; }
         public ActivityType SelectedActivity { get; set; } = ActivityType.MoveMouse;
+        public int IntervalSeconds { get; private set; }
 
         public event Action<bool>? StateChanged;
 
-        public ActivityService(int intervalSeconds = 30)
+        public ActivityService(int intervalSeconds, ActivityType activityType)
         {
+            IntervalSeconds = intervalSeconds;
+            SelectedActivity = activityType;
             _timer.Interval = TimeSpan.FromSeconds(intervalSeconds);
             _timer.Tick += (_, _) => InputSimulator.JiggleMouse();
         }
@@ -28,6 +31,10 @@ namespace StayActive.Services
             StateChanged?.Invoke(IsActive);
         }
 
-        public void SetInterval(int seconds) => _timer.Interval = TimeSpan.FromSeconds(seconds);
+        public void SetInterval(int seconds)
+        {
+            IntervalSeconds = seconds;
+            _timer.Interval = TimeSpan.FromSeconds(seconds);
+        }
     }
 }

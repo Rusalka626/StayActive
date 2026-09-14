@@ -18,14 +18,27 @@ namespace StayActive
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            var settings = SettingsService.Load();
 
-            ActivityService = new ActivityService(intervalSeconds: 30);
+            ActivityService = new ActivityService(settings.IntervalSeconds, settings.selectedActivity);
             ActivityService.StateChanged += OnActivityStateChanged;
 
             _trayIcon = (TaskbarIcon)Resources["TrayIcon"];
             _trayIcon.ForceCreate();
 
             MainWindow?.Hide();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            SettingsService.Save(new AppSettings
+            {
+                IntervalSeconds = ActivityService.IntervalSeconds,
+                selectedActivity = ActivityService.SelectedActivity,
+            });
+
+            _trayIcon?.Dispose();
+            base.OnExit(e);
         }
 
         private void OnActivityStateChanged(bool isActive)
