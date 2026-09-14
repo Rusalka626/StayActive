@@ -13,6 +13,7 @@
     <None Remove="Resources\Icon.ico" />
     <None Remove="Resources\icon_active.ico" />
     <None Remove="Resources\icon_inactive.ico" />
+    <None Remove="Resources\icon_menu.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +24,7 @@
     <Resource Include="Resources\Icon.ico" />
     <Resource Include="Resources\icon_active.ico" />
     <Resource Include="Resources\icon_inactive.ico" />
+    <Resource Include="Resources\icon_menu.ico" />
   </ItemGroup>
 
 </Project>

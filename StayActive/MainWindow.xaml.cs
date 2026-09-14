@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using StayActive.Services;
 using Application = System.Windows.Application;
+using System.Windows.Media;
+using Color = System.Windows.Media.Color;
 
 namespace StayActive;
 
@@ -62,6 +64,9 @@ public partial class MainWindow : Window
     private void UpdateStatusText(bool isActive)
     {
         StatusText.Text = isActive ? "Activo" : "Inactivo";
+        StatusDot.Fill = isActive
+        ? new SolidColorBrush(Color.FromRgb(46, 204, 113))
+        : new SolidColorBrush(Color.FromRgb(149, 165, 166));
     }
 
     private void ToggleButton_Click(object sender, RoutedEventArgs e)
