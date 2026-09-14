@@ -23,6 +23,7 @@ namespace StayActive.Services
                     return new AppSettings();
 
                 string json = File.ReadAllText(FilePath);
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
             }
             catch

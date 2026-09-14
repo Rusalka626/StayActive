@@ -26,19 +26,8 @@ namespace StayActive
             _trayIcon = (TaskbarIcon)Resources["TrayIcon"];
             _trayIcon.ForceCreate();
 
-            MainWindow?.Hide();
-        }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            SettingsService.Save(new AppSettings
-            {
-                IntervalSeconds = ActivityService.IntervalSeconds,
-                selectedActivity = ActivityService.SelectedActivity,
-            });
-
-            _trayIcon?.Dispose();
-            base.OnExit(e);
+            MainWindow = new MainWindow();
+            //MainWindow?.Hide();
         }
 
         private void OnActivityStateChanged(bool isActive)
@@ -72,6 +61,12 @@ namespace StayActive
 
         protected override void OnExit(ExitEventArgs e)
         {
+            SettingsService.Save(new AppSettings
+            {
+                IntervalSeconds = ActivityService.IntervalSeconds,
+                selectedActivity = ActivityService.SelectedActivity,
+            });
+
             _trayIcon?.Dispose();
             base.OnExit(e);
         }
