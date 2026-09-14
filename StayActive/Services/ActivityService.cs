@@ -1,40 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StayActive.Services;
 using System.Windows.Threading;
 
-namespace StayActive.Services
+public class ActivityService
 {
-    public class ActivityService
+    private readonly DispatcherTimer _timer = new();
+    private readonly DispatcherTimer _scheduleTimer = new(); // 👈 nuevo
+
+    public bool IsActive { get; private set; }
+    public ActivityType SelectedActivity { get; set; }
+    public int IntervalSeconds { get; private set; }
+
+    public bool ScheduleEnabled { get; set; }
+    public TimeSpan ScheduleStart { get; set; }
+    public TimeSpan ScheduleEnd { get; set; }
+
+    public event Action<bool>? StateChanged;
+
+    public ActivityService(AppSettings settings)
     {
-        private readonly DispatcherTimer _timer = new();
-        public bool IsActive { get; private set; }
-        public ActivityType SelectedActivity { get; set; } = ActivityType.MoveMouse;
-        public int IntervalSeconds { get; private set; }
+        IntervalSeconds = settings.IntervalSeconds;
+        SelectedActivity = settings.SelectedActivity;
+        ScheduleEnabled = settings.ScheduleEnabled;
+        ScheduleStart = settings.ScheduleStart;
+        ScheduleEnd = settings.ScheduleEnd;
 
-        public event Action<bool>? StateChanged;
+        _timer.Interval = TimeSpan.FromSeconds(IntervalSeconds);
+        _timer.Tick += (_, _) => InputSimulator.PerformActivity(SelectedActivity);
 
-        public ActivityService(int intervalSeconds, ActivityType activityType)
-        {
-            IntervalSeconds = intervalSeconds;
-            SelectedActivity = activityType;
-            _timer.Interval = TimeSpan.FromSeconds(intervalSeconds);
-            _timer.Tick += (_, _) => InputSimulator.JiggleMouse();
-        }
+        _scheduleTimer.Interval = TimeSpan.FromMinutes(1);
+        _scheduleTimer.Tick += (_, _) => CheckSchedule();
+        _scheduleTimer.Start(); // siempre corre, pero solo actúa si ScheduleEnabled = true
 
-        public void Toggle()
-        {
-            IsActive = !IsActive;
-            if (IsActive) _timer.Start(); else _timer.Stop();
-            StateChanged?.Invoke(IsActive);
-        }
+        CheckSchedule(); // evalúa el estado inicial al arrancar
+    }
 
-        public void SetInterval(int seconds)
-        {
-            IntervalSeconds = seconds;
-            _timer.Interval = TimeSpan.FromSeconds(seconds);
-        }
+    private void CheckSchedule()
+    {
+        if (!ScheduleEnabled) return;
+
+        var now = DateTime.Now.TimeOfDay;
+        bool shouldBeActive = ScheduleStart <= ScheduleEnd
+            ? now >= ScheduleStart && now < ScheduleEnd
+            : now >= ScheduleStart || now < ScheduleEnd; // soporta rangos que cruzan medianoche
+
+        if (shouldBeActive && !IsActive) Toggle();
+        else if (!shouldBeActive && IsActive) Toggle();
+    }
+
+    public void Toggle()
+    {
+        IsActive = !IsActive;
+        if (IsActive) _timer.Start(); else _timer.Stop();
+        StateChanged?.Invoke(IsActive);
+    }
+
+    public void SetInterval(int seconds)
+    {
+        IntervalSeconds = seconds;
+        _timer.Interval = TimeSpan.FromSeconds(seconds);
     }
 }

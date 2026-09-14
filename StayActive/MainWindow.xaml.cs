@@ -28,8 +28,30 @@ public partial class MainWindow : Window
                     break;
                 }
             }
+
+            ScheduleCheckBox.IsChecked = Service.ScheduleEnabled;
+            StartTimeBox.Text = Service.ScheduleStart.ToString(@"hh\:mm");
+            EndTimeBox.Text = Service.ScheduleEnd.ToString(@"hh\:mm");
+
             _isInitializing = false;
         };
+    }
+
+    private void ScheduleCheckBox_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_isInitializing) return;
+        Service.ScheduleEnabled = ScheduleCheckBox.IsChecked == true;
+    }
+
+    private void ScheduleTime_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_isInitializing) return;
+
+        if (TimeSpan.TryParse(StartTimeBox.Text, out var start))
+            Service.ScheduleStart = start;
+
+        if (TimeSpan.TryParse(EndTimeBox.Text, out var end))
+            Service.ScheduleEnd = end;
     }
 
     private void StartupCheckBox_Changed(object sender, RoutedEventArgs e)

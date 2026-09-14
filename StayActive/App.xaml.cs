@@ -20,7 +20,7 @@ namespace StayActive
             base.OnStartup(e);
             var settings = SettingsService.Load();
 
-            ActivityService = new ActivityService(settings.IntervalSeconds, settings.selectedActivity);
+            ActivityService = new ActivityService(settings);
             ActivityService.StateChanged += OnActivityStateChanged;
 
             _trayIcon = (TaskbarIcon)Resources["TrayIcon"];
@@ -64,7 +64,10 @@ namespace StayActive
             SettingsService.Save(new AppSettings
             {
                 IntervalSeconds = ActivityService.IntervalSeconds,
-                selectedActivity = ActivityService.SelectedActivity,
+                SelectedActivity = ActivityService.SelectedActivity,
+                ScheduleEnabled = ActivityService.ScheduleEnabled,
+                ScheduleStart = ActivityService.ScheduleStart,
+                ScheduleEnd = ActivityService.ScheduleEnd
             });
 
             _trayIcon?.Dispose();

@@ -1,8 +1,11 @@
 ﻿<Window x:Class="StayActive.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="StayActive - Configuración" Height="280" Width="350"
+        Title="StayActive - Configuración" Width="360"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">
+    
     <StackPanel Margin="20">
 
         <TextBlock Text="Estado:" FontWeight="Bold" Margin="0,0,0,5"/>
@@ -26,6 +29,29 @@
           Checked="StartupCheckBox_Changed"
           Unchecked="StartupCheckBox_Changed"
           Margin="0,0,0,15"/>
+
+        <CheckBox x:Name="ScheduleCheckBox"
+          Content="Horario automático"
+          Checked="ScheduleCheckBox_Changed"
+          Unchecked="ScheduleCheckBox_Changed"
+          Margin="0,0,0,10"/>
+
+        <Grid Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                <TextBlock Text="Desde:"/>
+                <TextBox x:Name="StartTimeBox" Text="09:00" LostFocus="ScheduleTime_Changed"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                <TextBlock Text="Hasta:"/>
+                <TextBox x:Name="EndTimeBox" Text="18:00" LostFocus="ScheduleTime_Changed"/>
+            </StackPanel>
+        </Grid>
 
         <Button Content="Activar / Desactivar" Height="35" Click="ToggleButton_Click"/>
 
