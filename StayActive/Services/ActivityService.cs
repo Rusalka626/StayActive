@@ -1,14 +1,16 @@
-﻿using StayActive.Services;
+﻿using System;
 using System.Windows.Threading;
+
+namespace StayActive.Services;
 
 public class ActivityService
 {
     private readonly DispatcherTimer _timer = new();
-    private readonly DispatcherTimer _scheduleTimer = new(); // 👈 nuevo
+    private readonly DispatcherTimer _scheduleTimer = new();
 
     public bool IsActive { get; private set; }
-    public ActivityType SelectedActivity { get; set; }
     public int IntervalSeconds { get; private set; }
+    public ActivityType SelectedActivity { get; set; }
 
     public bool ScheduleEnabled { get; set; }
     public TimeSpan ScheduleStart { get; set; }
@@ -25,13 +27,24 @@ public class ActivityService
         ScheduleEnd = settings.ScheduleEnd;
 
         _timer.Interval = TimeSpan.FromSeconds(IntervalSeconds);
-        _timer.Tick += (_, _) => InputSimulator.PerformActivity(SelectedActivity);
+        _timer.Tick += async (_, _) =>
+        {
+            if (SelectedActivity == ActivityType.PressSpace)
+            {
+                await InputSimulator.PressCtrlOnlyAsync();
+                await InputSimulator.PressSpaceBarAsync();
+            }
+            else
+            {
+                InputSimulator.PerformActivity(SelectedActivity);
+            }
+        };
 
         _scheduleTimer.Interval = TimeSpan.FromMinutes(1);
         _scheduleTimer.Tick += (_, _) => CheckSchedule();
-        _scheduleTimer.Start(); // siempre corre, pero solo actúa si ScheduleEnabled = true
+        _scheduleTimer.Start();
 
-        CheckSchedule(); // evalúa el estado inicial al arrancar
+        CheckSchedule();
     }
 
     private void CheckSchedule()
@@ -41,7 +54,7 @@ public class ActivityService
         var now = DateTime.Now.TimeOfDay;
         bool shouldBeActive = ScheduleStart <= ScheduleEnd
             ? now >= ScheduleStart && now < ScheduleEnd
-            : now >= ScheduleStart || now < ScheduleEnd; // soporta rangos que cruzan medianoche
+            : now >= ScheduleStart || now < ScheduleEnd;
 
         if (shouldBeActive && !IsActive) Toggle();
         else if (!shouldBeActive && IsActive) Toggle();

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace StayActive.Services;
 
@@ -51,7 +52,14 @@ public static class InputSimulator
     private const uint MOUSEEVENTF_LEFTUP = 0x0004;
 
     private const uint KEYEVENTF_KEYUP = 0x0002;
+    private const uint KEYEVENTF_SCANCODE = 0x0008;
+
     private const ushort VK_SPACE = 0x20;
+
+    private const ushort SCANCODE_SPACE = 0x39;
+    private const ushort SCANCODE_CONTROL = 0x1D;
+
+    private const int KeyHoldMs = 60; // duración real entre down y up, para que juegos como Fortnite lo detecten
 
     public static void JiggleMouse()
     {
@@ -62,7 +70,6 @@ public static class InputSimulator
         };
         SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
 
-        // mover de vuelta para que no "camine" el cursor
         input.mi.dx = -1;
         SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
     }
@@ -78,17 +85,35 @@ public static class InputSimulator
     public static void PressHarmlessKey()
     {
         // F15 no existe físicamente en teclados normales, así que no interfiere con nada.
-        // Usa SendKeys (WinForms) porque para este caso puntual no requiere SendInput.
         System.Windows.Forms.SendKeys.SendWait("{F15}");
     }
 
-    public static void PressSpaceBar()
+    private static void SendScanKey(ushort scanCode, bool keyUp)
     {
-        var down = new INPUT { type = INPUT_KEYBOARD, ki = new KEYBDINPUT { wVk = VK_SPACE } };
-        var up = new INPUT { type = INPUT_KEYBOARD, ki = new KEYBDINPUT { wVk = VK_SPACE, dwFlags = KEYEVENTF_KEYUP } };
+        var input = new INPUT
+        {
+            type = INPUT_KEYBOARD,
+            ki = new KEYBDINPUT
+            {
+                wScan = scanCode,
+                dwFlags = KEYEVENTF_SCANCODE | (keyUp ? KEYEVENTF_KEYUP : 0)
+            }
+        };
+        SendInput(1, new[] { input }, Marshal.SizeOf(typeof(INPUT)));
+    }
 
-        SendInput(1, new[] { down }, Marshal.SizeOf(typeof(INPUT)));
-        SendInput(1, new[] { up }, Marshal.SizeOf(typeof(INPUT)));
+    public static async Task PressSpaceBarAsync()
+    {
+        SendScanKey(SCANCODE_SPACE, keyUp: false);
+        await Task.Delay(KeyHoldMs);
+        SendScanKey(SCANCODE_SPACE, keyUp: true);
+    }
+
+    public static async Task PressCtrlOnlyAsync()
+    {
+        SendScanKey(SCANCODE_CONTROL, keyUp: false);
+        await Task.Delay(KeyHoldMs);
+        SendScanKey(SCANCODE_CONTROL, keyUp: true);
     }
 
     public static void PerformActivity(ActivityType type)
@@ -98,7 +123,7 @@ public static class InputSimulator
             case ActivityType.MoveMouse: JiggleMouse(); break;
             case ActivityType.ClickMouse: ClickAtCurrentPosition(); break;
             case ActivityType.PressKey: PressHarmlessKey(); break;
-            case ActivityType.PressSpace: PressSpaceBar(); break;
+                // PressSpace ya no pasa por aquí: se maneja como async desde ActivityService
         }
     }
 }
