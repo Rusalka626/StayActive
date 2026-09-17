@@ -36,6 +36,7 @@
             <ComboBoxItem Content="Mover mouse" Tag="MoveMouse" IsSelected="True"/>
             <ComboBoxItem Content="Click al aire" Tag="ClickMouse"/>
             <ComboBoxItem Content="Presionar tecla" Tag="PressKey"/>
+            <ComboBoxItem Content="Barra espaciadora" Tag="PressSpace"/>
         </ComboBox>
 
         <Separator Margin="0,0,0,15"/>
